@@ -1,0 +1,5 @@
+dependencies{
+    compile "commons-cli:commons-cli:1.4"
+    compile "io.vertx:vertx-shell:$vertxVersion"
+
+}

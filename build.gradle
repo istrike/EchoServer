@@ -1,0 +1,42 @@
+
+
+allprojects{
+    apply plugin: 'java'
+    group 'strike.toys'
+    version '1.0-SNAPSHOT'
+    sourceCompatibility = 1.8
+    repositories {
+        mavenCentral()
+    }
+    ext {
+        slf4jVersion = "1.7.25"
+        logbackVersion = "1.1.7"
+        springVersion = "4.3.3.RELEASE"
+        springBootVersion = "1.4.1.RELEASE"
+        vertxVersion = "3.6.2"
+        lombokVersion = "1.12.6"
+        guavaVersion = "17.0"
+        gsonVersion = "2.7"
+        jooqVersion = "3.9.0"
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+        compile "ch.qos.logback:logback-classic:$logbackVersion"
+        compile "ch.qos.logback:logback-core:$logbackVersion"
+        compile "io.vertx:vertx-web:$vertxVersion"
+        compile "io.vertx:vertx-sql-common:$vertxVersion"
+        compile "io.vertx:vertx-mysql-postgresql-client:$vertxVersion"
+        compile "org.projectlombok:lombok:$lombokVersion"
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.code.gson:gson:$gsonVersion"
+    }
+}
+
+
+
+
+
+

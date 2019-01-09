@@ -3,3 +3,18 @@ dependencies{
     compile "io.vertx:vertx-shell:$vertxVersion"
 
 }
+
+archivesBaseName = 'Client'
+
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ClientEntryPoint'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    baseName = archivesBaseName
+}

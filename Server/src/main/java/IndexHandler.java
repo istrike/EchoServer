@@ -20,7 +20,9 @@ class IndexHandler extends RouterImpl {
 
     public void GetIndex(RoutingContext rc) {
         log.info("write pong");
+        long startTime = System.currentTimeMillis();
         rc.response().end("pong");
+        log.info("response process time usage:"+Long.toString(System.currentTimeMillis()-startTime)+"ms");
     }
 
 

@@ -13,25 +13,24 @@ import java.net.URL;
 public class Tester extends AbstractVerticle {
 
     @Override
-    public void start() {
-        Future.succeededFuture()
-                .map(
-                        v -> {
-                            Context context = vertx.getOrCreateContext();
-                            Long startTime = System.currentTimeMillis();
-                            HttpClient httpClient = vertx.createHttpClient();
-                            httpClient.get(context.config().getString("endpoint"));
-                            log.info("time usage:"+ Long.toString(System.currentTimeMillis()-startTime)+"ms");
-                            return 0;
-                        }
-
-                )
-                .setHandler(ar -> {
-                    if (ar.failed()) {
-                        log.info(ar.cause().getMessage());
-                    }
+    public void start(Future<Void> startFuture){
+        Context context = vertx.getOrCreateContext();
+        Long startTime = System.currentTimeMillis();
+        HttpClient httpClient = vertx.createHttpClient();
+        String endpoint = context.config().getString("endpoint");
+        try{
+            URL url = new URL(endpoint);
+            httpClient.getNow(url.getPort(),url.getHost(),url.getPath(),response -> {
+                response.bodyHandler(body -> {
+//                    log.info("Got data " + body.toString());
+                    log.info("time usage:" + Long.toString(System.currentTimeMillis() - startTime) + "ms");
                 });
+            });
+        }
+        catch (MalformedURLException e){
+            log.info(e.getMessage());
+        }
 
-
+        startFuture.complete();
     }
 }

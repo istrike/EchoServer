@@ -1,5 +1,6 @@
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Context;
+import io.vertx.core.Future;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
@@ -10,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Tester extends AbstractVerticle {
 
     @Override
-    public void start() {
+    public void start(Future<Void> startFuture) {
         long startTime = System.currentTimeMillis();
         Context context = vertx.getOrCreateContext();
         NetClient TcpClient = vertx.createNetClient();
@@ -22,6 +23,7 @@ public class Tester extends AbstractVerticle {
                 });
                 socket.write("ping");
                 log.info("process time :{}",System.currentTimeMillis()-startTime);
+                startFuture.complete();
             } else {
                 log.info("Failed to connect:{} " ,res.cause().getCause());
             }

@@ -31,6 +31,7 @@ public class ClientEntryPoint {
         HelpFormatter formatter = new HelpFormatter();
         CommandLine cmd;
         try {
+            long startTime = System.currentTimeMillis();
             cmd = parser.parse(options, args);
             int cpus = Integer.parseInt(cmd.getOptionValue("cpus"));
             int concurrency = Integer.parseInt(cmd.getOptionValue("threads"));
@@ -51,8 +52,9 @@ public class ClientEntryPoint {
                     .setConfig(config);
             vertx.deployVerticle("Tester", develop, ar -> {
                 if (ar.succeeded()) {
-                    Context context = vertx.getOrCreateContext();
-                    log.info("size:" + context.config());
+                    log.info("all successed!!! use time:{}",System.currentTimeMillis()-startTime);
+                    vertx.close();
+
                 }
             });
         } catch (ParseException e) {

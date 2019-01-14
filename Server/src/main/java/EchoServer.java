@@ -14,11 +14,13 @@ public class EchoServer extends AbstractVerticle {
 
 
     public void start() {
+
         NetServer TcpServer = vertx.createNetServer();
         TcpServer.connectHandler(socket -> {
+            long startTime = System.currentTimeMillis();
             socket.handler(buffer -> {
-                log.info("recved:{}", buffer.toString());
                 socket.write("pong");
+                log.info("process time:{}",System.currentTimeMillis()-startTime);
             });
         });
 

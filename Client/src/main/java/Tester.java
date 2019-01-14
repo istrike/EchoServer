@@ -1,36 +1,31 @@
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.http.HttpClient;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetClientOptions;
+import io.vertx.core.net.NetSocket;
 import lombok.extern.slf4j.Slf4j;
-import sun.awt.ModalExclude;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 @Slf4j
 public class Tester extends AbstractVerticle {
 
     @Override
-    public void start(Future<Void> startFuture){
+    public void start() {
+        long startTime = System.currentTimeMillis();
         Context context = vertx.getOrCreateContext();
-        Long startTime = System.currentTimeMillis();
-        HttpClient httpClient = vertx.createHttpClient();
-        String endpoint = context.config().getString("endpoint");
-        try{
-            URL url = new URL(endpoint);
-            httpClient.getNow(url.getPort(),url.getHost(),url.getPath(),response -> {
-                response.bodyHandler(body -> {
-//                    log.info("Got data " + body.toString());
-                    log.info("time usage:" + Long.toString(System.currentTimeMillis() - startTime) + "ms");
+        NetClient TcpClient = vertx.createNetClient();
+        TcpClient.connect(context.config().getInteger("port"), context.config().getString("host"), res -> {
+            if (res.succeeded()) {
+                NetSocket socket = res.result();
+                socket.handler( buffer -> {
+//                    log.info("recv from server:{}",buffer.toString());
                 });
-            });
-        }
-        catch (MalformedURLException e){
-            log.info(e.getMessage());
-        }
+                socket.write("ping");
+                log.info("process time :{}",System.currentTimeMillis()-startTime);
+            } else {
+                log.info("Failed to connect:{} " ,res.cause().getCause());
+            }
+        });
 
-        startFuture.complete();
     }
 }
